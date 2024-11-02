@@ -1,41 +1,37 @@
-'use client';
+'use client'
 
-import Button from '@/components/Button';
-import Notify from '@/components/Notify';
-import { useAuth } from '@/hooks/auth';
-import { useState } from 'react';
+import { useState } from 'react'
+import { useAuth } from '@/hooks/auth'
+import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
-const Page: React.FC = () => {
-  const { logout, resendEmailVerification } = useAuth() as {
-    logout: () => void;
-    resendEmailVerification: (options: { setStatus: React.Dispatch<React.SetStateAction<string | null>> }) => void;
-  };
+export default function EmailVerification() {
+  const { logout, resendEmailVerification } = useAuth() as unknown as {
+    logout: () => void
+    resendEmailVerification: (options: { setStatus: React.Dispatch<React.SetStateAction<string | null>> }) => void
+  }
 
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null)
 
   return (
-    <>
-      <div className="mb-4 text-sm text-gray-600">
+    <div className="max-w-md mx-auto mt-8">
+      <h2 className="text-2xl font-bold mb-4">Email Verification</h2>
+      <p className="mb-4 text-sm text-gray-600">
         Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you did not receive the email, we will gladly send you another.
-      </div>
-
-      <div className="mt-4 flex items-center justify-between">
+      </p>
+      <div className="flex justify-between items-center">
         <Button onClick={() => resendEmailVerification({ setStatus })}>
           Resend Verification Email
         </Button>
-
-        <button
-          type="button"
-          className="underline text-sm text-gray-600 hover:text-gray-900"
-          onClick={logout}
-        >
+        <Button variant="outline" onClick={logout}>
           Logout
-        </button>
+        </Button>
       </div>
-
-      <Notify status={status} />
-    </>
-  );
+      {status && (
+        <Alert className="mt-4">
+          <AlertDescription>{status}</AlertDescription>
+        </Alert>
+      )}
+    </div>
+  )
 }
-
-export default Page;

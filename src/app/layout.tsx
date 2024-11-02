@@ -1,5 +1,3 @@
-import '@/app/css/app.css';
-import '@/app/sass/app.scss';
 import '@/app/css/global.css';
 
 export const metadata = {

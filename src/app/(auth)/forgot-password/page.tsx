@@ -1,71 +1,66 @@
-'use client';
+'use client'
 
-import { useState, FormEvent, ChangeEvent } from 'react';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
-import InputError from '@/components/InputError';
-import Label from '@/components/Label';
-import Notify from '@/components/Notify';
-import { useAuth } from '@/hooks/auth';
+import { useState, FormEvent } from 'react'
+import { useAuth } from '@/hooks/auth'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface Errors {
-  email?: string[];
+  email?: string[]
 }
 
-const Page: React.FC = () => {
-  const { forgotPassword } = useAuth() as {
+export default function ForgotPassword() {
+  const { forgotPassword } = useAuth() as unknown as {
     forgotPassword: (params: {
-      email: string;
-      setErrors: React.Dispatch<React.SetStateAction<Errors>>;
-      setStatus: React.Dispatch<React.SetStateAction<string | null>>;
-    }) => void;
-  };
+      email: string
+      setErrors: React.Dispatch<React.SetStateAction<Errors>>
+      setStatus: React.Dispatch<React.SetStateAction<string | null>>
+    }) => void
+  }
 
-  const [email, setEmail] = useState<string>('');
-  const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<string | null>(null);
+  const [email, setEmail] = useState('')
+  const [errors, setErrors] = useState<Errors>({})
+  const [status, setStatus] = useState<string | null>(null)
 
   const submitForm = (event: FormEvent) => {
-    event.preventDefault();
-
-    forgotPassword({ email, setErrors, setStatus });
-  };
+    event.preventDefault()
+    forgotPassword({ email, setErrors, setStatus })
+  }
 
   return (
-    <>
-      <div className="mb-4 text-sm text-gray-600">
+    <div className="max-w-md mx-auto mt-8">
+      <h2 className="text-2xl font-bold mb-4">Forgot Password</h2>
+      <p className="mb-4 text-sm text-gray-600">
         Forgot your password? No problem. Just let us know your email
         address and we will email you a password reset link that
         will allow you to choose a new one.
-      </div>
-
-      {/* Session Status */}
+      </p>
       <form onSubmit={submitForm}>
-        {/* Email Address */}
-        <div>
+        <div className="mb-4">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             type="email"
-            name="email"
             value={email}
-            className="block mt-1 w-full"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
             autoFocus
           />
-
-          <InputError messages={errors.email} className="mt-2" />
+          {errors.email && (
+            <p className="text-red-500 text-xs italic">{errors.email.join(', ')}</p>
+          )}
         </div>
-
-        <div className="flex items-center justify-end mt-4">
-          <Button>Email Password Reset Link</Button>
-        </div>
-
-        <Notify status={status} />
+        <Button type="submit" className="w-full">
+          Email Password Reset Link
+        </Button>
       </form>
-    </>
-  );
-};
-
-export default Page;
+      {status && (
+        <Alert className="mt-4">
+          <AlertDescription>{status}</AlertDescription>
+        </Alert>
+      )}
+    </div>
+  )
+}

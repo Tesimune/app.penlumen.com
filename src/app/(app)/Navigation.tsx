@@ -1,118 +1,120 @@
-import React, { useState } from 'react';
-import AppLogo from '@/components/AppLogo';
-import Link from 'next/link';
-import NavLink from '@/components/NavLink';
-import { useAuth } from '@/hooks/auth';
-import { usePathname } from 'next/navigation';
-import Button from '@/components/Button';
-import Notify from '@/components/Notify';
+'use client'
 
-interface NavigationProps {
-  user: any; // Replace 'any' with actual user type if possible
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useAuth } from '@/hooks/auth'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Bell, LayoutDashboard, Briefcase, PiggyBank, LogOut } from 'lucide-react'
+import Logo from '@/components/logo'
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sidebar, SidebarSection } from "@/components/ui/sidebar"
+
+interface User {
+  name: string
+  email: string
 }
 
-const Navigation: React.FC<NavigationProps> = ({ user }) => {
-  const { logout } = useAuth();
-  const [status, setStatus] = useState<string | null>(null);
+interface NavigationProps {
+  user: User
+}
 
-  const submit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
+export default function Navigation({ user }: NavigationProps) {
+  const { logout } = useAuth()
+  const [status, setStatus] = useState<string | null>(null)
+  const pathname = usePathname()
 
-    logout({
-      setStatus,
-    });
-  };
+  const handleLogout = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault()
+    logout({ setStatus })
+  }
+
+  const navItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/drafts', label: 'Drafts', icon: Briefcase },
+    { href: '/published', label: 'Published', icon: PiggyBank },
+  ]
 
   return (
-    <div>
-      <Notify status={status} />
-      <div className="navbar bg-slate-100">
-        <div className="navbar-start">
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h7"
-                />
-              </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content gap-3 bg-slate-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <NavLink
-                  href="/dashboard"
-                  active={usePathname() === '/dashboard'}
-                >
-                  Dashboard
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  href="/business"
-                  active={usePathname() === '/business'}
-                >
-                  Business
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  href="/investment"
-                  active={usePathname() === '/investment'}
-                >
-                  Investment
-                </NavLink>
-              </li>
-              <li>
-                <Button
-                  className="bg-white text-red-500 border-red-500 hover:text-red-700 hover:border-red-300 focus:text-red-700 focus:border-red-300"
-                  onClick={submit}
-                >
-                  Logout
+    <nav className="bg-slate-100 shadow-sm">
+      {status && (
+        <Alert>
+          <AlertDescription>{status}</AlertDescription>
+        </Alert>
+      )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="mr-2 lg:hidden">
+                  <LayoutDashboard className="h-5 w-5" />
+                  <span className="sr-only">Open menu</span>
                 </Button>
-              </li>
-            </ul>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-64">
+                <Sidebar className="border-r-0">
+                  <SidebarSection>
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 ${
+                          pathname === item.href ? 'bg-gray-100 text-gray-900' : ''
+                        }`}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.label}
+                      </Link>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-red-500 hover:text-red-700 hover:bg-red-50"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </SidebarSection>
+                </Sidebar>
+              </SheetContent>
+            </Sheet>
+            <Link href="/dashboard" className="flex-shrink-0 flex items-center">
+              {/* <Logo className="block h-8 w-auto" /> */}
+            </Link>
+          </div>
+          <div className="hidden lg:flex lg:items-center lg:space-x-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 ${
+                  pathname === item.href ? 'bg-gray-100 text-gray-900' : ''
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center">
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">View notifications</span>
+              <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white" />
+            </Button>
+            <Button
+              variant="ghost"
+              className="ml-4 text-red-500 hover:text-red-700 hover:bg-red-50 lg:hidden"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-5 w-5" />
+              <span className="sr-only">Logout</span>
+            </Button>
           </div>
         </div>
-        <div className="navbar-center">
-          <Link href="/dashboard">
-            <AppLogo className="block h-10 w-auto fill-current text-gray-600" />
-          </Link>
-        </div>
-        <div className="navbar-end">
-          <button className="btn btn-ghost btn-circle">
-            <div className="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-              <span className="badge badge-xs badge-primary indicator-item"></span>
-            </div>
-          </button>
-        </div>
       </div>
-    </div>
-  );
-};
-
-export default Navigation;
+    </nav>
+  )
+}

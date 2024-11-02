@@ -1,21 +1,21 @@
 'use client';
 
-import { FormEvent, useState, ChangeEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import Link from 'next/link';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
-import InputError from '@/components/InputError';
-import Label from '@/components/Label';
-import Notify from '@/components/Notify';
 import { useAuth } from '@/hooks/auth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface Errors {
   email?: string[];
   password?: string[];
 }
 
-const Login: React.FC = () => {
-  const { login } = useAuth() as {
+export default function Login() {
+  const { login } = useAuth() as unknown as {
     login: (params: {
       email: string;
       password: string;
@@ -25,9 +25,9 @@ const Login: React.FC = () => {
     }) => void;
   };
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [shouldRemember, setShouldRemember] = useState<boolean>(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [shouldRemember, setShouldRemember] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<string | null>(null);
 
@@ -44,69 +44,91 @@ const Login: React.FC = () => {
   };
 
   return (
-    <>
-      <form onSubmit={submitForm}>
-        {/* Email Address */}
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            className="block mt-1 w-full"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-            required
-            autoFocus
-          />
-          {errors.email && <InputError messages={errors.email} className="mt-2" />}
-        </div>
+    <div className='flex items-center justify-center min-h-screen'>
+      <div className='w-full max-w-md'>
+        <form
+          onSubmit={submitForm}
+          className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'
+        >
+          <h2 className='text-2xl font-bold mb-6 text-center'>Login</h2>
 
-        {/* Password */}
-        <div className="mt-4">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            className="block mt-1 w-full"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-            required
-            autoComplete="current-password"
-          />
-          {errors.password && <InputError messages={errors.password} className="mt-2" />}
-        </div>
-
-        {/* Remember Me */}
-        {/* <div className="block mt-4">
-          <label htmlFor="remember_me" className="inline-flex items-center">
-            <input
-              id="remember_me"
-              type="checkbox"
-              name="remember"
-              className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => setShouldRemember(event.target.checked)}
+          <div className='mb-4'>
+            <Label htmlFor='email'>Email</Label>
+            <Input
+              id='email'
+              type='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoFocus
             />
-            <span className="ml-2 text-sm text-gray-600">Remember me</span>
-          </label>
-        </div> */}
+            {errors.email && (
+              <p className='text-red-500 text-xs italic'>
+                {errors.email.join(', ')}
+              </p>
+            )}
+          </div>
 
-        <div className="flex items-center justify-between mt-4">
-          <Link href="/register" className="underline text-sm text-gray-600 hover:text-gray-900">
-            Register?
-          </Link>
+          <div className='mb-6'>
+            <Label htmlFor='password'>Password</Label>
+            <Input
+              id='password'
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete='current-password'
+            />
+            {errors.password && (
+              <p className='text-red-500 text-xs italic'>
+                {errors.password.join(', ')}
+              </p>
+            )}
+          </div>
 
-          <Link href="/forgot-password" className="underline text-sm text-gray-600 hover:text-gray-900">
-            Forgot your password?
-          </Link>
+          <div className='mb-6'>
+            <div className='flex items-center'>
+              <Checkbox
+                id='remember'
+                checked={shouldRemember}
+                onCheckedChange={(checked) =>
+                  setShouldRemember(checked as boolean)
+                }
+              />
+              <Label htmlFor='remember' className='ml-2'>
+                Remember me
+              </Label>
+            </div>
+          </div>
 
-          <Button className="ml-3">Login</Button>
-        </div>
+          <div className='flex items-center justify-between mb-6'>
+            <Link
+              href='/register'
+              className='text-sm text-blue-500 hover:text-blue-800'
+            >
+              Register
+            </Link>
+            <Link
+              href='/forgot-password'
+              className='text-sm text-blue-500 hover:text-blue-800'
+            >
+              Forgot your password?
+            </Link>
+          </div>
 
-        {/* Status Message */}
-        <Notify status={status} />
-      </form>
-    </>
+          <div className='flex items-center justify-between'>
+            <Button type='submit' className='w-full'>
+              Login
+            </Button>
+          </div>
+
+          {status && (
+            <Alert className='mt-6'>
+              <AlertDescription>{status}</AlertDescription>
+            </Alert>
+          )}
+        </form>
+      </div>
+    </div>
   );
-};
-
-export default Login;
+}

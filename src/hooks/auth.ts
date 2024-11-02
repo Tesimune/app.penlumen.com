@@ -23,8 +23,6 @@ interface AuthProps {
 interface RegisterProps extends AuthProps {
   first_name: string;
   last_name: string;
-  phone_code: string;
-  phone_number: string;
   password_confirmation: string;
 }
 
@@ -67,8 +65,6 @@ export const useAuth = () => {
     first_name,
     last_name,
     email,
-    phone_code,
-    phone_number,
     password,
     password_confirmation,
     setErrors,
@@ -83,8 +79,6 @@ export const useAuth = () => {
         first_name,
         last_name,
         email,
-        phone_code,
-        phone_number,
         password,
         password_confirmation,
       });

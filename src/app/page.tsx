@@ -1,70 +1,90 @@
-import LoginLinks from '@/app/LoginLinks'
 import Link from 'next/link';
-import {FaFacebookSquare, FaTwitter, FaInstagram, FaLinkedin, FaEnvelope, FaTwitch} from 'react-icons/fa';
-import { MdOutlineMail } from 'react-icons/md'
-import { SiMinutemailer } from 'react-icons/si'
+import { Metadata } from 'next';
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Mail,
+  Send,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import Logo from '@/components/logo';
 
-
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Penlumen - Welcome',
+  description: 'The Writers Hub for genius minds',
 };
 
-const Home = () => {
-    return (
-      <>
-        <div className="flex items-top justify-center min-h-screen bg-gray-100 sm:items-center sm:pt-0">
-          {/* <LoginLinks /> */}
+export default function Home() {
+  return (
+    <div className='flex items-center justify-center min-h-screen bg-gray-100 font-sans'>
+      <section className='w-full max-w-4xl p-6 md:p-10'>
+        <div className='space-y-8 text-zinc-600'>
+          <div className='flex justify-center'>
+            <Logo />
+          </div>
 
-           <section className="header p-7 md:p-10 bg-gray-50flex items-center justify-center font-[poppins]">
-                <div className="wrapper md:w-2/3 mx-auto text-zinc-600 space-y-9">
-                    {/* <div className="grid justify-center p-3">
-                        <AppLogo />
-                    </div> */}
-                    <h2 className='md:text-5xl text-3xl font-bold text-center capitalize leading-[1.2]'>
-                        the Writers Hub for genius minds
-                    </h2>
-                    <p className='text-md md:text-lg text-center mx-auto  '>
-                        Create, Share and Earn with <span className='font-semibold'>Writer</span>.
-                        Equipped with FREE tools to help make your creative journey a success.
-                        It offers ACCESS to tools to improve and assist you in writing error free contents.
-                    </p>
+          <h1 className='text-3xl md:text-5xl font-bold text-center capitalize leading-tight'>
+            The Writers Hub for Genius Minds
+          </h1>
 
-                    <div className="flex flex-col sm:flex-row items-stretch text-center sm:items-center gap-5 justify-center">
-                        <Link href='login' className='py-3 px-3 md:px-10 border rounded-lg capitalize'>
-                            get started
-                        </Link>
-                        <Link href='register' className='py-3 px-3 md:px-10 bg-blue-900 text-white rounded-lg capitalize'>
-                            join the community
-                        </Link>
-                    </div>
+          <p className='text-lg md:text-xl text-center'>
+            Create, Share and Earn with{' '}
+            <span className='font-semibold'>Writer</span>. Equipped with FREE
+            tools to help make your creative journey a success. It offers ACCESS
+            to tools to improve and assist you in writing error-free content.
+          </p>
 
-                    {/* <form className="flex items-center">
-                        <label className="sr-only">subscribe</label>
-                        <div className="relative w-full">
-                            <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                                <MdOutlineMail className="w-5 h-5 text-gray-500" />
-                            </div>
-                            <input type="eamil" id="simple-subscribe" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3" placeholder="subscribe" required />
-                        </div>
-                        <button type="submit" className="p-3 ml-2 text-sm font-medium text-white bg-blue-900 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                            <SiMinutemailer className="w-5 h-5" />
-                            <span className="sr-only">subscribe</span>
-                        </button>
-                    </form> */}
+          <div className='flex flex-col sm:flex-row items-stretch gap-4 justify-center'>
+            <Button asChild variant='outline' className='w-full sm:w-auto'>
+              <Link href='/login'>Get Started</Link>
+            </Button>
+            <Button asChild className='w-full sm:w-auto'>
+              <Link href='/register'>Join the Community</Link>
+            </Button>
+          </div>
 
-                    <div className="flex items-center gap-5 text-2xl pt-10 justify-center text-zinc-500">
-                        <a href="#"><FaFacebookSquare /></a>
-                        <a href="#"><FaTwitter /></a>
-                        <a href="#"><FaInstagram /></a>
-                        <a href="#"><FaLinkedin /></a>
-                        <a href="#"><FaEnvelope /></a>
-                    </div>
+          <form
+            className='flex items-center gap-2'
+            // onSubmit={(e) => e.preventDefault()}
+          >
+            <div className='relative flex-grow'>
+              <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500' />
+              <Input
+                type='email'
+                id='subscribe-email'
+                placeholder='Enter your email'
+                className='pl-10'
+                required
+              />
+            </div>
+            <Button type='submit' className='flex-shrink-0'>
+              <Send className='w-5 h-5 mr-2' />
+              Subscribe
+            </Button>
+          </form>
 
-                </div>
-            </section>
+          <div className='flex items-center gap-6 justify-center text-zinc-500'>
+            <a href='#' aria-label='Facebook'>
+              <Facebook className='w-6 h-6' />
+            </a>
+            <a href='#' aria-label='Twitter'>
+              <Twitter className='w-6 h-6' />
+            </a>
+            <a href='#' aria-label='Instagram'>
+              <Instagram className='w-6 h-6' />
+            </a>
+            <a href='#' aria-label='LinkedIn'>
+              <Linkedin className='w-6 h-6' />
+            </a>
+            <a href='#' aria-label='Email'>
+              <Mail className='w-6 h-6' />
+            </a>
+          </div>
         </div>
-      </>
-    );
+      </section>
+    </div>
+  );
 }
-
-export default Home

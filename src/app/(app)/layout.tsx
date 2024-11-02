@@ -1,7 +1,8 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/auth';
-import Navigation from '@/app/(app)/Navigation';
-import Loading from '@/app/(app)/Loading';
+import Navigation from '@/app/(app)/navigation';
+import Loading from '@/components/loading';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -20,17 +21,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     fetchData();
 
     if (!loading && !user) {
-      window.location.href = '/login';
+      // window.location.href = '/login';
     }
   }, [fetchUser, user, loading]);
 
-  if (loading || !user) {
-    return <Loading />;
-  }
+  // if (loading || !user) {
+  //   return <Loading />;
+  // }
 
   return (
-    <div className="min-h-screen bg-gray-100 scroll">
-      <Navigation user={user} />
+    <div className='min-h-screen bg-gray-100 scroll'>
+      {/* <Navigation user={user} /> */}
       <main>{children}</main>
     </div>
   );

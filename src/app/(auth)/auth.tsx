@@ -3,12 +3,11 @@
 import { useEffect, ReactNode } from 'react';
 import { useAuth } from '@/hooks/auth';
 
-interface AuthCardProps {
-  logo: ReactNode;
+interface AuthProps {
   children: ReactNode;
 }
 
-const AuthCard: React.FC<AuthCardProps> = ({ logo, children }) => {
+const Auth: React.FC<AuthProps> = ({ children }) => {
   const { fetchUser, user } = useAuth() as {
     fetchUser: () => void;
     user: { [key: string]: any } | null;
@@ -22,16 +21,10 @@ const AuthCard: React.FC<AuthCardProps> = ({ logo, children }) => {
   }, [fetchUser, user]);
 
   return (
-    <div className="grid justify-center items-center h-screen">
-      <div className="flex justify-center items-center">
-        {logo}
-      </div>
-
-      <div className="md:min-w-[350px] w-76">
+    <div className='container mx-auto'>
         {children}
-      </div>
     </div>
   );
 };
 
-export default AuthCard;
+export default Auth;
